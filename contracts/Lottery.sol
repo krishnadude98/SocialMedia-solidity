@@ -11,7 +11,7 @@ error Lottery__NotOpen();
 error Lottery__UpkeepNotNeeded(uint256 currentBalance, uint256 numPlayers, uint256 lotteryState);
 
 /**
- * @title Lottery contract with random winner selection using xhainlink oracle random
+ * @title Lottery contract with random winner selection using Chainlink oracle
  * @author Hari Krishna
  * @notice This contract has verifiable random generator
  * @dev This contract implements Chainlink VRF V2 and Chainlink Keepers
@@ -130,7 +130,7 @@ contract Lottery is VRFConsumerBaseV2, AutomationCompatibleInterface {
         return i_entrancefee;
     }
 
-    function getPLayer(uint256 _index) public view returns (address) {
+    function getPlayer(uint256 _index) public view returns (address) {
         return s_players[_index];
     }
 
@@ -156,5 +156,9 @@ contract Lottery is VRFConsumerBaseV2, AutomationCompatibleInterface {
 
     function getRequestConfirmations() public pure returns (uint256) {
         return REQUEST_CONFIRMATIONS;
+    }
+
+    function getInterval() public view returns (uint256) {
+        return i_interval;
     }
 }

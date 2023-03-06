@@ -14,7 +14,7 @@ const COIN_MARKET_CAP_API_KEY = process.env.COIN_MARKET_CAP_API_KEY;
 module.exports = {
     defaultNetwork: "hardhat",
     networks: {
-        gorelli: {
+        goreli: {
             url: GORELLI_RPC_URL,
             accounts: [PRIVATE_KEY],
             chainId: 5,
@@ -46,6 +46,7 @@ module.exports = {
             goerli: API_KEY,
             polygonMumbai: POLYGON_API_KEY,
         },
+        customChains: [],
     },
     gasReporter: {
         enabled: true,
@@ -54,5 +55,8 @@ module.exports = {
         currency: "USD",
         coinmarketcap: COIN_MARKET_CAP_API_KEY,
         token: "MATIC",
+    },
+    mocha: {
+        timeout: 400000,
     },
 };
