@@ -1,5 +1,5 @@
 {
-    "name": "hardhat-smartcontract-lottery",
+    "name": "hardhat-social-media-app",
     "version": "1.0.0",
     "description": "",
     "scripts": {
@@ -29,10 +29,6 @@
         "solidity-coverage": "^0.7.13"
     },
     "dependencies": {
-        "@chainlink/contracts": "^0.5.1",
-        "@chainlink/test-helpers": "^0.0.7-alpha",
-        "@chainlink/token": "^1.1.0",
-        "@openzeppelin/contracts": "^4.5.0",
         "babel-eslint": "^10.1.0",
         "dotenv": "^10.0.0"
     },

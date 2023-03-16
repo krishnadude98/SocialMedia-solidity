@@ -5,52 +5,42 @@ const { experimentalAddHardhatNetworkMessageTraceHook } = require("hardhat/confi
 
 developmentChains.includes(network.name)
     ? describe.skip
-    : describe("Lottery", function () {
-          let lottery, lotteryEntranceFee, deployer;
+    : describe("SocialMedia", function () {
+          let socialMedia, deployer;
           const chainId = network.config.chainId;
 
           beforeEach(async function () {
               deployer = (await getNamedAccounts()).deployer;
-              lottery = await ethers.getContract("Lottery", deployer);
-              lotteryEntranceFee = await lottery.getEntranceFee();
+              socialMedia = await ethers.getContract("SocialMedia", deployer);
           });
 
-          describe("fullfillRandomWords", async function () {
-              it("Works with live chainlink keepers and chainlink VRF,we get random winner", async function () {
-                  const startingTimestamp = await lottery.getLatestTimeStamp();
-                  const accounts = await ethers.getSigners();
+          describe("SocialMedia", async function () {
+              it("it create and delete posts", async function () {
                   await new Promise(async function (resolve, reject) {
-                      lottery.once("WinnerPicked", async function () {
-                          console.log("winner picked event happened");
+                      socialMedia.once("NewPost", async function () {
+                          console.log("new post event happened");
                           try {
-                            
-                              const recentWinner = await lottery.getRecentWinner();
-                            
-                              const lotterySTate = await lottery.getLotteryState();
-                             
-                              const winnerEndingBalnce = await accounts[0].getBalance();
-                    
-                              const endingTimestamp = await lottery.getLatestTimeStamp();
-                          
+                              let countAfterPosting = await socialMedia.getTotalPost();
+                              console.log(countAfterPosting.toNumber());
+                              assert(countAfterPosting.toNumber() > initialCount.toNumber());
 
-                              await expect(lottery.getPlayer(0)).to.be.reverted;
-                        
-                              assert.equal(recentWinner.toString(), accounts[0].address);
-                              assert.equal(lotterySTate, 0);
-                              assert.equal(
-                                  winnerEndingBalnce.toString(),
-                                  winnerStartingBalance.add(lotteryEntranceFee).toString()
-                              );
-                              assert(endingTimestamp > startingTimestamp);
-                              resolve();
+                              await socialMedia.deletePost(countAfterPosting);
+
+                              let posts = await socialMedia.getIpfsHash(countAfterPosting + 1);
+                              assert.equal(posts.toString(), "");
                           } catch (error) {
                               console.log(error);
                               reject(e);
                           }
+                          resolve();
                       });
-                      const tx = await lottery.enterLottery({ value: lotteryEntranceFee });
+                      const initialCount = await socialMedia.getTotalPost();
+                      console.log(initialCount.toNumber());
+                      const tx = await socialMedia.createPost(
+                          "hi this is sample post",
+                          "QmNYCuayPJkbHWbxSytgq8qJm7kUgA4RLfCwzSF3CGbGwn"
+                      );
                       await tx.wait(1);
-                      const winnerStartingBalance = await accounts[0].getBalance();
                   });
               });
           });
